@@ -10,10 +10,18 @@ class GroupSpider(CrawlSpider):
     allowed_domains = ["douban.com"]
     start_urls = [
         #u'http://book.douban.com/tag/?view=type'
-        u'http://book.douban.com/tag/艺术史'
+        u'http://book.douban.com/tag/小说'
     ]
 
     rules = [
+        # 规则 获得页面里面的下一页，follow爬下去
+        Rule(SgmlLinkExtractor(
+                allow=('/subject/\d+/$',),
+                restrict_xpaths=('//*[@id="subject_list"]/*',),
+            ),
+            callback='parse_book',
+            process_request='add_cookie',
+        ),
         # 规则 获得页面里面的下一页，follow爬下去
         Rule(SgmlLinkExtractor(
                 allow=('/tag/[^/]+\?start=',),
@@ -35,6 +43,13 @@ class GroupSpider(CrawlSpider):
              'path': '/'},
             ]);
         return request;
+
+    def parse_book(self, response):
+        url = response.url
+        self.log(url)
+        with open('./data/book', 'a') as f:
+            f.write(url)
+            f.write(linesep)
 
     def parse_book_tag(self, response):
         url = response.url
