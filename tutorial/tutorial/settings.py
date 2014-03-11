@@ -6,6 +6,15 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
+
+# Setting up django's project full path.
+import sys
+sys.path.insert(0, '/opt/spider_django')
+
+# Setting up django's settings module name.
+# This module is located at /home/rolando/projects/myweb/myweb/settings.py.
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'spider_django.settings'
 BOT_NAME = 'tutorial'
 
 SPIDER_MODULES = ['tutorial.spiders']
