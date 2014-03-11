@@ -4,6 +4,8 @@ from os import linesep
 
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.selector import Selector
+from tutorial.items import BookItem
 
 class GroupSpider(CrawlSpider):
     name = "douban_book"
@@ -45,11 +47,17 @@ class GroupSpider(CrawlSpider):
         return request;
 
     def parse_book(self, response):
-        url = response.url
-        self.log(url)
-        with open('./data/book', 'a') as f:
-            f.write(url)
-            f.write(linesep)
+        sel = Selector(response)
+        title = sel.css("#wrapper > h1 > span").xpath('text()').extract()[0]
+        p_article = sel.css(".article")
+        #url = response.url
+        #self.log(url)
+        #with open('./data/book', 'a') as f:
+            #f.write(url)
+            #f.write(linesep)
+        item = BookItem()
+        item['title'] = title
+        return item
 
     def parse_book_tag(self, response):
         url = response.url
