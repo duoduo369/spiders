@@ -29,5 +29,5 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5'
 COOKIES_ENABLED = True
 
 ITEM_PIPELINES = {
-    'tutorial.pipelines.JsonWriterPipeline': 300,
+    'tutorial.pipelines.DjangoPipeline': 300,
 }
