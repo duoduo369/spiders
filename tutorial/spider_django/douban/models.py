@@ -98,7 +98,8 @@ class Book(models.Model):
     rate_peoples = models.BigIntegerField(
         verbose_name=u'评论人数',
         max_length=30,
-        default=0,
+        blank=True,
+        null=True,
     )
     star_1 = models.FloatField(
         verbose_name=u'1星',

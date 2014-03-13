@@ -54,7 +54,7 @@ class GroupSpider(CrawlSpider):
         data = {
             'title': sel.css("#wrapper > h1 > span").xpath('text()'),
             'cover': p_article.xpath('//*[@id="mainpic"]/a/img/@src'),
-            'author': p_info.re(u'作者</span>:\s*.*<a.*>(\[.*\]){0,1}\s*(.*)</a>\s*</span>'),
+            'author': p_info.re(u'作者</span>:\s*.*<a.*>(.*)</a>\s*</span>'),
         }
         cover_data(data)
         item = BookItem()
