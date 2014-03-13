@@ -17,6 +17,11 @@ class Book(models.Model):
         blank=True,
         null=True,
     )
+    author_country = models.CharField(
+        max_length=MAX_LENGTH_20,
+        blank=True,
+        null=True,
+    )
     pub = models.CharField(
         max_length=MAX_LENGTH_200,
         blank=True,
@@ -29,6 +34,11 @@ class Book(models.Model):
     )
     translator = models.CharField(
         max_length=MAX_LENGTH_200,
+        blank=True,
+        null=True,
+    )
+    cover = models.URLField(
+        verbose_name=u'封面',
         blank=True,
         null=True,
     )

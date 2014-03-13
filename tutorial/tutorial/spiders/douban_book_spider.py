@@ -2,6 +2,7 @@
 
 from os import linesep
 
+from utils import cover_data
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import Selector
@@ -48,15 +49,17 @@ class GroupSpider(CrawlSpider):
 
     def parse_book(self, response):
         sel = Selector(response)
-        title = sel.css("#wrapper > h1 > span").xpath('text()').extract()[0]
         p_article = sel.css(".article")
-        #url = response.url
-        #self.log(url)
-        #with open('./data/book', 'a') as f:
-            #f.write(url)
-            #f.write(linesep)
+        p_info = p_article.css("#info")
+        data = {
+            'title': sel.css("#wrapper > h1 > span").xpath('text()'),
+            'cover': p_article.xpath('//*[@id="mainpic"]/a/img/@src'),
+            'author': p_info.re(u'作者</span>:\s*.*<a.*>(\[.*\]){0,1}\s*(.*)</a>\s*</span>'),
+        }
+        cover_data(data)
         item = BookItem()
-        item['title'] = title
+        for attr, value in data.iteritems():
+            item[attr] = value
         return item
 
     def parse_book_tag(self, response):
