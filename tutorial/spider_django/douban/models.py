@@ -17,11 +17,6 @@ class Book(models.Model):
         blank=True,
         null=True,
     )
-    author_country = models.CharField(
-        max_length=MAX_LENGTH_20,
-        blank=True,
-        null=True,
-    )
     pub = models.CharField(
         max_length=MAX_LENGTH_200,
         blank=True,

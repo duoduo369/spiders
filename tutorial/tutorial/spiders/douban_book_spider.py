@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os import linesep
+from operator import itemgetter
 
 from utils import cover_data
 from scrapy.contrib.spiders import CrawlSpider, Rule
@@ -8,35 +9,35 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import Selector
 from tutorial.items import BookItem
 
+
 class GroupSpider(CrawlSpider):
     name = "douban_book"
     allowed_domains = ["douban.com"]
     start_urls = [
-        #u'http://book.douban.com/tag/?view=type'
+        # u'http://book.douban.com/tag/?view=type'
         u'http://book.douban.com/tag/小说'
     ]
 
     rules = [
         # 规则 获得页面里面的下一页，follow爬下去
         Rule(SgmlLinkExtractor(
-                allow=('/subject/\d+/$',),
-                restrict_xpaths=('//*[@id="subject_list"]/*',),
-            ),
+            allow=('/subject/\d+/$',),
+            restrict_xpaths=('//*[@id="subject_list"]/*',),
+        ),
             callback='parse_book',
             process_request='add_cookie',
         ),
         # 规则 获得页面里面的下一页，follow爬下去
         Rule(SgmlLinkExtractor(
-                allow=('/tag/[^/]+\?start=',),
-                restrict_xpaths=('//*[@id="subject_list"]/'
-                                 'div[@class="paginator"]/span[@class="next"]/a',),
-            ),
+            allow=('/tag/[^/]+\?start=',),
+            restrict_xpaths=('//*[@id="subject_list"]/'
+                             'div[@class="paginator"]/span[@class="next"]/a',),
+        ),
             callback='parse_book_tag',
             follow=True,
             process_request='add_cookie',
         ),
     ]
-
 
     def add_cookie(self, request):
         request.replace(cookies=[
@@ -44,13 +45,18 @@ class GroupSpider(CrawlSpider):
              'value': 'VALUE',
              'domain': '.book.douban.com',
              'path': '/'},
-            ]);
-        return request;
+        ])
+        return request
 
     def parse_book(self, response):
         sel = Selector(response)
-        p_article = sel.css(".article")
-        p_info = p_article.css("#info")
+        get_0 = itemgetter(0)
+        p_article = sel.css('.article')
+        p_info = p_article.css('#info')
+        p_interest_sectl = p_article.css('#interest_sectl')
+        p_intro = p_article.css('#link-report .intro')
+        _desc = [p.xpath('text()').extract() for p in p_intro.css('p')]
+        desc = linesep.join(get_0(text_list) for text_list in _desc if text_list)
         fetch_dict = {
             u'</span>:\s*.*<a.*>(.*)</a>\s*</span>': {
                 'author': u'作者',
@@ -75,19 +81,17 @@ class GroupSpider(CrawlSpider):
             'title': sel.css("#wrapper > h1 > span").xpath('text()'),
             'cover': p_article.xpath('//*[@id="mainpic"]/a/img/@src'),
             'link': response.url,
+            'desc': desc,
+            'rate': p_interest_sectl.css('.rating_num').xpath("text()").re('\d\.\d'),
+            'rate_peoples': p_interest_sectl.css('[href=collections]>span').xpath("text()"),
         }
         for _re, each in fetch_dict.iteritems():
             for key, word in each.iteritems():
-                data[key] = p_info.re(word+_re)
+                data[key] = p_info.re(word + _re)
         cover_data(data)
         item = BookItem()
         for attr, value in data.iteritems():
             item[attr] = value
-        try:
-            item['price'] = float(item['price'])
-        except ValueError as ex:
-            item['price'] = 0
-            print ex
         return item
 
     def parse_book_tag(self, response):
