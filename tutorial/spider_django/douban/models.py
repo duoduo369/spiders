@@ -72,6 +72,7 @@ class Book(models.Model):
     )
     link = models.URLField(
         verbose_name=u'url',
+        unique=True,
         blank=True,
         null=True,
     )
@@ -82,12 +83,6 @@ class Book(models.Model):
     )
     rate = models.FloatField(
         verbose_name=u'评分',
-        blank=True,
-        null=True,
-    )
-    tags = models.CharField(
-        verbose_name=u'标签',
-        max_length=MAX_LENGTH_1024,
         blank=True,
         null=True,
     )

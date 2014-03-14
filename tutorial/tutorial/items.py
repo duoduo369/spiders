@@ -13,6 +13,5 @@ class DmozItem(Item):
     link = Field()
     desc = Field()
 
-# info.re(u'作者</span>:\s*.*\s*</span>')
 class BookItem(DjangoItem):
     django_model = Book
