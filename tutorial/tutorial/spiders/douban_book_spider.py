@@ -10,6 +10,7 @@ from scrapy.selector import Selector
 from tutorial.items import BookItem
 from douban.models import Book
 
+
 class GroupSpider(CrawlSpider):
     name = "douban_book"
     allowed_domains = ["douban.com"]
@@ -58,7 +59,8 @@ class GroupSpider(CrawlSpider):
         p_interest_sectl = p_article.css('#interest_sectl')
         p_intro = p_article.css('#link-report .intro')
         _desc = [p.xpath('text()').extract() for p in p_intro.css('p')]
-        desc = linesep.join(get_0(text_list) for text_list in _desc if text_list)
+        desc = linesep.join(get_0(text_list)
+                            for text_list in _desc if text_list)
         rate_stars = p_interest_sectl.re('</div>\s*(\d+\.\d+)')
         fetch_dict = {
             u'</span>:\s*.*<a.*>(.*)</a>\s*</span>': {
@@ -89,7 +91,7 @@ class GroupSpider(CrawlSpider):
             'rate_peoples': p_interest_sectl.css('[href=collections]>span').xpath("text()"),
         }
         for index, percent in enumerate(rate_stars):
-            data['star_'+str(index+1)] = percent
+            data['star_' + str(index + 1)] = percent
 
         for _re, each in fetch_dict.iteritems():
             for key, word in each.iteritems():
@@ -98,25 +100,36 @@ class GroupSpider(CrawlSpider):
         item = BookItem()
         for attr, value in data.iteritems():
             item[attr] = value
-        float_attr = ['price', 'rate', 'star_1', 'star_2', 'star_3', 'star_4', 'star_5']
-        int_attr = ['pages', 'rate_peoples']
-        for attr in int_attr:
-            try:
-                int(item[attr])
-            except ValueError as ex:
-                print '================'
-                print attr, item[attr]
-                del item[atrr]
-                print ex
 
-        for attr in float_attr:
-            try:
-                float(item[attr])
-            except ValueError as ex:
-                print '================'
-                print attr, item[attr]
-                del item[attr]
-                print ex
+        def _handle_exception(item):
+            attr_list = [
+                {
+                    '_type': float,
+                    '_list': ['price', 'rate', 'star_1',
+                              'star_2', 'star_3', 'star_4', 'star_5'],
+                },
+                {
+                    '_type': int,
+                    '_list': ['pages', 'rate_peoples'],
+                },
+            ]
+            for attr_dict in attr_list:
+                _type, _list = attr_dict['_type'], attr_dict['_list']
+                for attr in _list:
+                    try:
+                        _type(item[attr])
+                    except ValueError as ex:
+                        print '================'
+                        print attr, item[attr]
+                        del item[attr]
+                        print ex
+                    except TypeError as ex:
+                        print '================'
+                        print attr, item[attr]
+                        del item[attr]
+                        print ex
+
+        _handle_exception(item)
         return item
 
     def parse_book_tag(self, response):

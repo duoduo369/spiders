@@ -33,6 +33,6 @@ COOKIES_ENABLED = True
 ITEM_PIPELINES = {
     'tutorial.pipelines.DjangoPipeline': 300,
 }
-LOG_LEVEL = log.INFO
+LOG_LEVEL = log.DEBUG
 LOG_FILE = './log/log.txt'
 LOG_STDOUT = True
