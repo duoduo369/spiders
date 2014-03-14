@@ -36,7 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'douban'
+    'rest_framework',
+    'douban',
 )
 
 MIDDLEWARE_CLASSES = (
