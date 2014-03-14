@@ -1,4 +1,4 @@
-            # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from os import linesep
 
@@ -51,15 +51,43 @@ class GroupSpider(CrawlSpider):
         sel = Selector(response)
         p_article = sel.css(".article")
         p_info = p_article.css("#info")
+        fetch_dict = {
+            u'</span>:\s*.*<a.*>(.*)</a>\s*</span>': {
+                'author': u'作者',
+                'translator': u'译者',
+            },
+            u':</span>\s*(.*?)元<br>': {
+                'price': u'定价',
+            },
+            u':</span>\s*.*<a.*>(.*)</a>\s*<br>': {
+                'series': u'丛书',
+            },
+            u':</span>\s*(.*?)<br>': {
+                'pub': u'出版社',
+                'origin_title': u'原作名',
+                'pub_date': u'出版年',
+                'pages': u'页数',
+                'binding': u'装帧',
+                'ISBN': u'ISBN'
+            },
+        }
         data = {
             'title': sel.css("#wrapper > h1 > span").xpath('text()'),
             'cover': p_article.xpath('//*[@id="mainpic"]/a/img/@src'),
-            'author': p_info.re(u'作者</span>:\s*.*<a.*>(.*)</a>\s*</span>'),
+            'link': response.url,
         }
+        for _re, each in fetch_dict.iteritems():
+            for key, word in each.iteritems():
+                data[key] = p_info.re(word+_re)
         cover_data(data)
         item = BookItem()
         for attr, value in data.iteritems():
             item[attr] = value
+        try:
+            item['price'] = float(item['price'])
+        except ValueError as ex:
+            item['price'] = 0
+            print ex
         return item
 
     def parse_book_tag(self, response):

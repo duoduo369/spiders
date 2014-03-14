@@ -42,8 +42,9 @@ class Book(models.Model):
         blank=True,
         null=True,
     )
-    pub_date = models.DateField(
+    pub_date = models.CharField(
         verbose_name=u'出版日期',
+        max_length=MAX_LENGTH_20,
         blank=True,
         null=True,
     )
@@ -53,7 +54,7 @@ class Book(models.Model):
         null=True,
     )
     price = models.FloatField(
-        verbose_name=u'完成率',
+        verbose_name=u'定价',
         blank=True,
         null=True,
     )
