@@ -86,9 +86,8 @@ class Book(models.Model):
         blank=True,
         null=True,
     )
-    rate_peoples = models.BigIntegerField(
+    rate_peoples = models.IntegerField(
         verbose_name=u'评论人数',
-        max_length=30,
         blank=True,
         null=True,
     )

@@ -9,11 +9,13 @@
 
 # Setting up django's project full path.
 import sys
+import os
+from scrapy import log
+
 sys.path.insert(0, '/opt/spider_django')
 
 # Setting up django's settings module name.
 # This module is located at /home/rolando/projects/myweb/myweb/settings.py.
-import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'spider_django.settings'
 BOT_NAME = 'tutorial'
 
@@ -31,3 +33,6 @@ COOKIES_ENABLED = True
 ITEM_PIPELINES = {
     'tutorial.pipelines.DjangoPipeline': 300,
 }
+LOG_LEVEL = log.INFO
+LOG_FILE = './log/log.txt'
+LOG_STDOUT = True

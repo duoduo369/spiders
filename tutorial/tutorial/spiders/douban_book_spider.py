@@ -99,13 +99,23 @@ class GroupSpider(CrawlSpider):
         for attr, value in data.iteritems():
             item[attr] = value
         float_attr = ['price', 'rate', 'star_1', 'star_2', 'star_3', 'star_4', 'star_5']
-        for attr in float_attr:
+        int_attr = ['pages', 'rate_peoples']
+        for attr in int_attr:
             try:
-                item[attr] = float(item[attr])
+                int(item[attr])
             except ValueError as ex:
                 print '================'
                 print attr, item[attr]
-                item[attr] = 0
+                del item[atrr]
+                print ex
+
+        for attr in float_attr:
+            try:
+                float(item[attr])
+            except ValueError as ex:
+                print '================'
+                print attr, item[attr]
+                del item[attr]
                 print ex
         return item
 
