@@ -32,6 +32,5 @@ $( ->
           .duration(750)
           .attr('r', 12)
           .style('stroke-opacity', '1')
-
     )
 )
