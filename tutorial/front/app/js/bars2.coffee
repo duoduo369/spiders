@@ -5,6 +5,11 @@ $(
    h = 250
    bar_padding = 1
 
+   x_scale = d3.scale
+               .ordinal()
+               .domain(d3.range(data.length))
+               .rangeRoundBands([0, w], 0.05)
+
    svg = d3.select('.bars2')
            .append('svg')
            .attr({ width: w, height: h, })
@@ -14,7 +19,7 @@ $(
       .enter()
       .append('rect')
       .attr(
-        width: w / data.length,
+        width: x_scale.rangeBand(),
         height: (d) -> 4 * d,
         fill: (d) -> 'rgb(0 ,0, ' + d * 10 +')',
         x: (d, i) -> (w / data.length + 1) * i,
