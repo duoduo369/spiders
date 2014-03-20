@@ -61,10 +61,23 @@ $( ->
     svg.selectAll('circle')
       .data(_data)
       .transition()
+      .delay((d,i) -> i / data.length * 1000)
+      .each('start', ->
+        d3.select(@)
+          .attr
+            fill: 'magenta'
+            r: 3
+      )
       .duration(1000)
       .attr(
         'cx': (d) -> x_scale(d[0]),
         'cy': (d) -> y_scale(d[1]),
+      )
+      .each('end', ->
+        d3.select(@)
+          .attr
+            fill: 'red'
+            r: 2
       )
     svg.select('.x.axis').transition().duration(1000).call(x_axis)
     svg.select('.y.axis').transition().duration(1000).call(y_axis)

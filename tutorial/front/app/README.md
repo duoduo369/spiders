@@ -70,3 +70,27 @@ categories with some inherent order to them, such as:
     .delay(1000)  # 延迟
     .duration(1000) # 动画转换时间
     .ease('elastic')  # 渐变方式 https://github.com/mbostock/d3/wiki/Transitions#d3_ease
+
+    svg.selectAll("circle")
+       .data(dataset)
+       .transition()
+       .duration(1000)
+       .each("start", function() {      // <-- Executes at start of transition
+           d3.select(this)
+             .attr("fill", "magenta")
+             .attr("r", 3);
+       })
+       .attr("cx", function(d) {
+            return xScale(d[0]);
+       })
+       .attr("cy", function(d) {
+            return yScale(d[1]);
+       })
+       .each("end", function() {        // <-- Executes at end of transition
+           d3.select(this)
+             .attr("fill", "black")
+             .attr("r", 2);
+       });
+    each start中不能内嵌transition, 而end可以，d3在处理transition的时候
+    同一个元素只能有一组动画，因此start中的transition会中断后来的动画，
+    而end则不同，因为end的时候其他的动画早已结束
