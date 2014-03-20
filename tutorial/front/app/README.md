@@ -44,3 +44,17 @@ scale
         [100, 500]          ->   [20,50]
         input区间100~500    ->   ouput区间按比例缩放为20~50
 
+
+Ordinal
+---
+
+Ordinal scales are typically used for ordinal data, typically
+categories with some inherent order to them, such as:
+
+    * freshman, sophomore, junior, senior
+    * grade B, grade A, grade AA
+    * strongly dislike, dislike, neutral, like, strongly like
+
+    scale.ordinal().domain([100, 500]).rangeBands([20, 50], 0.05);
+    scale.ordinal().domain([100, 500]).rangeRoundBands([20, 50], 0.05);
+    第三个参赛是指两个区间之间有多大的空白，单位%

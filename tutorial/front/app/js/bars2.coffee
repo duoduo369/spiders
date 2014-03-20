@@ -9,6 +9,10 @@ $(
                .ordinal()
                .domain(d3.range(data.length))
                .rangeRoundBands([0, w], 0.05)
+   y_scale = d3.scale
+               .linear()
+               .domain([d3.min(data), d3.max(data)])
+               .range([0, h])
 
    svg = d3.select('.bars2')
            .append('svg')
@@ -20,10 +24,10 @@ $(
       .append('rect')
       .attr(
         width: x_scale.rangeBand(),
-        height: (d) -> 4 * d,
+        height: (d) -> y_scale(d),
         fill: (d) -> 'rgb(0 ,0, ' + d * 10 +')',
-        x: (d, i) -> (w / data.length + 1) * i,
-        y: (d) -> h - 4 * d,
+        x: (d, i) -> x_scale(i)
+        y: (d) -> h - y_scale(d),
       )
    svg.selectAll('text')
       .data(data)
@@ -31,10 +35,9 @@ $(
       .append('text')
       .text((d) -> d)
       .attr("text-anchor", "middle")
-      .attr("x", (d, i) ->
-          i * (w / data.length + 1) + (w / data.length) / 2
+      .attr("x", (d, i) -> x_scale(i) + x_scale.rangeBand() / 2
       )
-      .attr("y", (d) -> h - (d * 4) + 14)
+      .attr("y", (d) -> h - y_scale(d) + 14)
       .attr("font-family", "sans-serif")
       .attr("font-size", "11px")
       .attr("fill", "white")
