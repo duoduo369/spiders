@@ -44,6 +44,10 @@ scale
         [100, 500]          ->   [20,50]
         input区间100~500    ->   ouput区间按比例缩放为20~50
 
+    定义scale后可以更新domain等
+        x_scale.domain([0, d3.max(_data, (d) -> d[0])])
+        y_scale.domain([0, d3.max(_data, (d) -> d[1])])
+
 
 Ordinal
 ---
