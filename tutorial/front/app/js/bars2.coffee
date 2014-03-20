@@ -1,14 +1,17 @@
 change_bar = (svg, data, h, w, x_scale, y_scale) ->
   _data = []
+  _data = data
   max_h = d3.max(data)
-  for i in [0...data.length]
-    _data.push(Math.floor(Math.random() * max_h))
+  #for i in [0...data.length]
+    #_data.push(Math.floor(Math.random() * max_h))
+  _data.shift()
+  _data.push(Math.floor(Math.random() * max_h))
 
   svg.selectAll('rect')
     .data(_data)
     .transition()
     .delay((d, i) -> i * 100)
-    .duration(5000)
+    .duration(1000)
     .ease('elastic')
     .attr(
       height: (d) -> y_scale(d)

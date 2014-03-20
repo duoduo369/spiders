@@ -1,8 +1,24 @@
 d3.js
 ===
 
+遵循coffee的语法
+d3里面.换行是可以的，不过换行就要遵循coffee的语法，两个空格缩进,负责会有很奇怪
+的编译结果
+    $( ->
+      one line
+      svg = XXXX.select()
+      svg.XXX
+        .XXX
+        .xxx
+    )
+
 data enter
 ---
+
+Whenever there are more data values than corresponding DOM elements, the
+enter selection contains references to those elements that do not yet
+exist. 
+
     data = [1..10]
     d3.select('body')
       .selectAll('div')
