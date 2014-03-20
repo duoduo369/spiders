@@ -58,3 +58,11 @@ categories with some inherent order to them, such as:
     scale.ordinal().domain([100, 500]).rangeBands([20, 50], 0.05);
     scale.ordinal().domain([100, 500]).rangeRoundBands([20, 50], 0.05);
     第三个参赛是指两个区间之间有多大的空白，单位%
+
+动画
+---
+    用在select后，attr前
+    .transition()
+    .delay(1000)  # 延迟
+    .duration(1000) # 动画转换时间
+    .ease('elastic')  # 渐变方式 https://github.com/mbostock/d3/wiki/Transitions#d3_ease
