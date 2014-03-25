@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 
-import models_setting as config
+import model_settings as config
 
 MAX_LENGTH = config.MAX_LENGTH_100
 
