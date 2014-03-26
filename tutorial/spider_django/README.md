@@ -1,0 +1,4 @@
+django toy
+---
+
+ * practice
